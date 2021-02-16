@@ -13,34 +13,29 @@ import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
-
+    lateinit var request: PeriodicWorkRequest
+    lateinit var data: Data
+    lateinit var constraints: Constraints
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var constraints=Constraints.Builder()
-
-            .setRequiresCharging(true).build()
+        constraints = Constraints.Builder().setRequiresCharging(true).build()
 
         //send data to worker
-        var data = Data.Builder()
-            .putString(KEY_TASK_DES, "hey the work data sending").build()
+        data = Data.Builder().putString(KEY_TASK_DES, "hey the work data sending").build()
 /*
         var request: OneTimeWorkRequest = OneTimeWorkRequest.Builder(MyWorker::class.java)
-
             .setInputData(data)
             .setConstraints(constraints)
             .build()*/
 
-        var request = PeriodicWorkRequest.Builder(
+        request = PeriodicWorkRequest.Builder(
             MyWorker::class.java,
             5, TimeUnit.MINUTES
-        )
-
-
-            .setInputData(data)
+        ).setInputData(data)
             .setConstraints(constraints)
             .build()
 
@@ -55,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(request.id).observe(
             this, { t ->
-
                 //get data From workManger
                 if (t != null) {
                     if (t.state.isFinished) {
@@ -65,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
 
-                    val status = t!!.state.name
+                    val status = t.state.name
                     txt_WorkManager.append("$status\n")
                 }
             }

@@ -1,20 +1,22 @@
-package com.amirhusseinsoori.sampleworkmanger
+package com.amirhusseinsoori.sampleworkmanger.worker
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.amirhusseinsoori.sampleworkmanger.Constance.KEY_TASK_DES
-import com.amirhusseinsoori.sampleworkmanger.Constance.KEY_TASK_DES_OUT_PUT
-import java.util.*
-
-class MyWorker(var _Context: Context, workerParams: WorkerParameters?) : Worker(
+import com.amirhusseinsoori.sampleworkmanger.util.Constance.KEY_TASK_DES
+import com.amirhusseinsoori.sampleworkmanger.util.Constance.KEY_TASK_DES_OUT_PUT
+import com.amirhusseinsoori.sampleworkmanger.R
+//Use  CoroutineWorker instead of Worker
+// A CoroutineWorker is given a maximum of ten minutes to finish its execution and return a
+// After this time has expired, the worker will be signalled to stop.
+class Worker(var _Context: Context, workerParams: WorkerParameters?) : CoroutineWorker(
     _Context, workerParams!!
 ) {
 
@@ -22,8 +24,8 @@ class MyWorker(var _Context: Context, workerParams: WorkerParameters?) : Worker(
     lateinit var channel: NotificationChannel
     lateinit var getData: Data
     lateinit var sendDataFromWorker: Data
-
-    override fun doWork(): Result {
+    //by default doWork Dispatcher default
+    override suspend fun doWork(): Result {
 
         return try {
             //getDate From Activity  with Key

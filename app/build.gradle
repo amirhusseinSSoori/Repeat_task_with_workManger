@@ -44,8 +44,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    //implementation "androidx.work:work-runtime:2.5.0"
 
+    // Kotlin + coroutines
    implementation "androidx.work:work-runtime-ktx:2.5.0"
 
 
@@ -59,4 +59,13 @@ dependencies {
     def coroutine_Lifecycle_Scopes = "2.3.0-rc01"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$coroutine_Lifecycle_Scopes"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$coroutine_Lifecycle_Scopes"
+
+
+
+    // Navigation Components
+    def navigation_components = "2.3.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_components"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_components"
+
+
 }

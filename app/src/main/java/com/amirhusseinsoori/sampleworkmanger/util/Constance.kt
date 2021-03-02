@@ -1,4 +1,4 @@
-package com.amirhusseinsoori.sampleworkmanger
+package com.amirhusseinsoori.sampleworkmanger.util
 
 object Constance {
     val KEY_TASK_DES = "key_task_des"

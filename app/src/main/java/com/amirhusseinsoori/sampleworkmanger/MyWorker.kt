@@ -9,8 +9,10 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.amirhusseinsoori.sampleworkmanger.Constance.KEY_TASK_DES
 import com.amirhusseinsoori.sampleworkmanger.Constance.KEY_TASK_DES_OUT_PUT
+import java.util.*
 
 class MyWorker(var _Context: Context, workerParams: WorkerParameters?) : Worker(
     _Context, workerParams!!
@@ -22,12 +24,30 @@ class MyWorker(var _Context: Context, workerParams: WorkerParameters?) : Worker(
     lateinit var sendDataFromWorker: Data
 
     override fun doWork(): Result {
-        getData = inputData
-        val des = getData.getString(KEY_TASK_DES)
-        displayNotification("hey I am Your Work", des!!)
-        sendDataFromWorker =
-            Data.Builder().putString(KEY_TASK_DES_OUT_PUT, "task finish Successfully").build()
-        return Result.success(sendDataFromWorker)
+
+        return try {
+            //getDate From Activity  with Key
+            val des: String? = inputData.getString(KEY_TASK_DES)
+
+            // run task
+            displayNotification("hey I am Your Work  ", "$des")
+
+
+            // Send Data From Worker  with Key
+            //with workDataOf you can map one or multiple key
+            sendDataFromWorker = workDataOf(KEY_TASK_DES_OUT_PUT to "task finish Successfully")
+
+            Result.success(sendDataFromWorker)
+        } catch (ex: Throwable) {
+
+            //If there were errors ,return FAILURE
+            Result.failure()
+
+            //  In Some case,we may want to return Result.retry() to indicate that want retry
+            //  running this work at a  later time
+        }
+
+
     }
 
 

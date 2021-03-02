@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
+        //we used id for know state Request
         workManager.getWorkInfoByIdLiveData(requestPeriodicWork.id).observe(
             this, { t ->
                 //get data From workManger

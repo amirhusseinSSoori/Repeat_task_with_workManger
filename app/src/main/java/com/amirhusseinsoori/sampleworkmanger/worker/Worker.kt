@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -33,6 +34,7 @@ class Worker(var _Context: Context, workerParams: WorkerParameters?) : Coroutine
 
             // run task
             displayNotification("hey I am Your Work  ", "$des")
+            Log.e("TAG", "doWork:   ", )
 
 
             // Send Data From Worker  with Key

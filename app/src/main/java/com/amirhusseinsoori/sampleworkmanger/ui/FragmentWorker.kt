@@ -27,12 +27,12 @@ class FragmentWorker : Fragment(R.layout.worker_fragment) {
     //  3.the tag name of a WorkRequest that you can optionally add
 
     lateinit var outputWorkInfoItems: LiveData<List<WorkInfo>>
-    lateinit var  workManager: WorkManager
+    lateinit var workManager: WorkManager
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        workManager=WorkManager.getInstance(requireContext())
+        workManager = WorkManager.getInstance(requireContext())
 
 
         // This transformation makes sure that whenever th current work Id changes  the workState
@@ -47,16 +47,20 @@ class FragmentWorker : Fragment(R.layout.worker_fragment) {
         data = Data.Builder().putString(Constance.KEY_TASK_DES, "hey the work data sending").build()
 
         // create the WorkRequest  OnTime
-        requestOneTime = OneTimeWorkRequest.Builder(Worker::class.java)
-            .setInputData(data)
-            .addTag(Constance.TAG_OUTPUT)
-            .setConstraints(constraints)
-            .build()
+        requestOneTime =
+            OneTimeWorkRequest.Builder(Worker::class.java).setInitialDelay(5, TimeUnit.SECONDS)
+                .setInputData(data)
+                .addTag(Constance.TAG_OUTPUT)
+                .setConstraints(constraints)
+                .build()
 
         btn_workerF_onTime.setOnClickListener {
             workManager.beginWith(requestOneTime).enqueue()
 
         }
+
+        //you can  cancel work with tag
+        // workManager.cancelAllWorkByTag(Constance.TAG_OUTPUT)
 
         // If We wanted our job to run periodically , we can use PeriodicWorkRequest instead
         requestPeriodicWork = PeriodicWorkRequestBuilder<Worker>(
@@ -76,21 +80,22 @@ class FragmentWorker : Fragment(R.layout.worker_fragment) {
 
 
         //we used id for know state RequestPeriodicWork
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(requestPeriodicWork.id).observe(
-            viewLifecycleOwner, { t ->
-                //get data From workManger
-                if (t != null) {
-                    if (t.state.isFinished) {
-                        val dataOutPut: Data = t.outputData
-                        val output = dataOutPut.getString(Constance.KEY_TASK_DES_OUT_PUT)
-                        txt_workerF_WorkManager.append("$output \n")
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(requestPeriodicWork.id)
+            .observe(
+                viewLifecycleOwner, { t ->
+                    //get data From workManger
+                    if (t != null) {
+                        if (t.state.isFinished) {
+                            val dataOutPut: Data = t.outputData
+                            val output = dataOutPut.getString(Constance.KEY_TASK_DES_OUT_PUT)
+                            txt_workerF_WorkManager.append("$output \n")
+                        }
+
+
+                        val status = t.state.name
+                        txt_workerF_WorkManager.append("$status\n")
                     }
-
-
-                    val status = t.state.name
-                    txt_workerF_WorkManager.append("$status\n")
                 }
-            }
-        )
+            )
     }
 }
